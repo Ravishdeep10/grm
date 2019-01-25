@@ -39,7 +39,30 @@ type DenseMatrix struct{
 	elements	[][]float64
 }
 
-// Initialize a dense array with random values between 0 and 1
+
+func (d *DenseMatrix) Get(i int, j int) float64 {
+	return d.elements[i][j]
+}
+
+func (d *DenseMatrix) Set(i int, j int, value float64) {
+	d.elements[i][j] = value
+}
+
+func (d *DenseMatrix) getRow(i int) []float64 {
+	return d.elements[i]
+}
+
+func (d *DenseMatrix) getCol(j int) []float64 {
+	col := make([]float64, d.n)
+
+	for i := range d.elements {
+		col[i] = d.elements[i][j]
+	}
+
+	return col
+}
+
+// Initialize a dense matrix with random values between 0 and 1
 func randomMatInit(row int, col int) *DenseMatrix{
 
 	d := &DenseMatrix{
@@ -47,7 +70,9 @@ func randomMatInit(row int, col int) *DenseMatrix{
 		nil,
 	}
 
+	// We want to make it random everytime that it runs
 	rand.Seed(time.Now().UnixNano())
+
 	d.elements = make([][]float64, row)
 	for i := range d.elements {
 		d.elements[i] = make([]float64, col)
