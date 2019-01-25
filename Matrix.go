@@ -2,6 +2,8 @@ package go_recommend_me
 
 import (
 	"log"
+	"math/rand"
+	"time"
 )
 
 type matrix struct {
@@ -29,6 +31,33 @@ func (mat *matrix) checkBounds(row int, col int)  {
 	if !(row < mat.n && col < mat.m) {
 		log.Fatalln("Out of Bounds Error")
 	}
+}
+
+// A dense matrix ie a regular matrix format
+type DenseMatrix struct{
+	matrix
+	elements	[][]float64
+}
+
+// Initialize a dense array with random values between 0 and 1
+func randomMatInit(row int, col int) *DenseMatrix{
+
+	d := &DenseMatrix{
+		matrix{row, col},
+		nil,
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	d.elements = make([][]float64, row)
+	for i := range d.elements {
+		d.elements[i] = make([]float64, col)
+		for j := range d.elements[i]{
+			d.elements[i][j] = rand.Float64()
+		}
+	}
+
+	return d
+
 }
 
 // The sparse matrix format will follow the CSR or compressed sparse row format
@@ -164,8 +193,6 @@ func (s *SparseMatrix) addRows(num int) {
 func (s *SparseMatrix) getRow(row int) []float64 {
 	return s.vals[s.rows[row]:s.rows[row + 1]]
 }
-
-
 
 
 
