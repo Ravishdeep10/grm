@@ -16,9 +16,9 @@ type LearnAlgo interface {
 
 // A basic Matrix factorization algorithm
 
-type basicMF struct {}
+type BasicMF struct {}
 
-func (m *basicMF) estimateItemRating(a []float64, b[]float64, dimensionality int) float64{
+func (m *BasicMF) estimateItemRating(a []float64, b[]float64, dimensionality int) float64{
 	sum := 0.0
 	for i := 0; i < dimensionality; i ++ {
 		sum += (a[i] * b[i])
@@ -28,7 +28,7 @@ func (m *basicMF) estimateItemRating(a []float64, b[]float64, dimensionality int
 
 
 // A Matrix Factorization algo using Stochastic Gradient Learning
-func (m *basicMF) learn(tset trainingSet, parameters modelParameters) *learnedFactors {
+func (m *BasicMF) learn(tset trainingSet, parameters modelParameters) *learnedFactors {
 	// initialize learned factors
 
 	itemFactors := randomMatInit(tset.numItems, tset.k)
@@ -82,7 +82,7 @@ func (m *basicMF) learn(tset trainingSet, parameters modelParameters) *learnedFa
 
 
 
-func (m *basicMF) estimateRating(userIndex int, itemIndex int, lfactors *learnedFactors) float64{
+func (m *BasicMF) estimateRating(userIndex int, itemIndex int, lfactors *learnedFactors) float64{
 	if userIndex >= lfactors.numUser {
 		log.Fatalln("Out of Bounds error")
 	}
