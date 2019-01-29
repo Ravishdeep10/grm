@@ -8,10 +8,10 @@ import (
 // An interface for learning algorithms
 type LearnAlgo interface {
 	// A stochastic gradient descent
-	learn(set trainingSet, parameters modelParameters) *learnedFactors
+	learn(set TrainingSet) *LearnedFactors
 
 	// Returns approximates user's rating of an item based on some learned factors
-	estimateRating(userIndex int, itemIndex int, lfactors *learnedFactors) float64
+	estimateRating(userIndex int, itemIndex int, lfactors *LearnedFactors) float64
 }
 
 // A basic Matrix factorization algorithm
@@ -28,7 +28,7 @@ func (m *BasicMF) estimateItemRating(a []float64, b[]float64, dimensionality int
 
 
 // A Matrix Factorization algo using Stochastic Gradient Learning
-func (m *BasicMF) learn(tset trainingSet, parameters modelParameters) *learnedFactors {
+func (m *BasicMF) learn(tset TrainingSet) *LearnedFactors {
 	// initialize learned factors
 
 	itemFactors := randomMatInit(tset.numItems, tset.k)
@@ -68,7 +68,7 @@ func (m *BasicMF) learn(tset trainingSet, parameters modelParameters) *learnedFa
 	}
 
 
-	l := &learnedFactors{
+	l := &LearnedFactors{
 		numItems: tset.numItems,
 		numUser: tset.numUsers,
 		dimensionality: tset.k,
@@ -82,7 +82,7 @@ func (m *BasicMF) learn(tset trainingSet, parameters modelParameters) *learnedFa
 
 
 
-func (m *BasicMF) estimateRating(userIndex int, itemIndex int, lfactors *learnedFactors) float64{
+func (m *BasicMF) estimateRating(userIndex int, itemIndex int, lfactors *LearnedFactors) float64{
 	if userIndex >= lfactors.numUser {
 		log.Fatalln("Out of Bounds error")
 	}
