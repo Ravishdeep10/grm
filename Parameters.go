@@ -1,7 +1,7 @@
 package go_recommend_me
 
-
-type modelParameters struct{
+// Parmeters for the algorithm
+type ModelParameters struct{
 	numUsers		int
 	numItems		int
 

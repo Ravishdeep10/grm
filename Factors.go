@@ -1,16 +1,18 @@
 package go_recommend_me
 
-
-type learnedFactors struct{
+// Output of a learning algorithm's stochastic gradient descent process
+type LearnedFactors struct{
+	// Passed in from tset parameters
 	numUser			int
 	numItems		int
 	dimensionality	int
 
-	userBias		[]float64
-	itemBias		[]float64
 
+	// average of the ratings
 	ratingsAvg		float64
 
+	// Two matrices based on latent factors whose product would
+	//	reult in the matrix passed in through the tset parameters
 	userFactors		*DenseMatrix
 	itemFactors		*DenseMatrix
 
