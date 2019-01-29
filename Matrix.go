@@ -62,6 +62,23 @@ func (d *DenseMatrix) getCol(j int) []float64 {
 	return col
 }
 
+func (d *DenseMatrix) Transpose() *DenseMatrix {
+	dT := &DenseMatrix{
+		matrix {
+			d.m,
+			d.n,
+		},
+		nil,
+	}
+
+	dT.elements = make([][]float64, dT.n)
+	for i := range dT.elements{
+		dT.elements[i] = d.getCol(i)
+	}
+
+	return dT
+}
+
 // Initialize a dense matrix with random values between 0 and 1
 func randomMatInit(row int, col int) *DenseMatrix{
 
