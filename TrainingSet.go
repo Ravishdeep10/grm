@@ -7,15 +7,15 @@ type TrainingSet struct {
 	ratingsMatrix	SparseMatrix
 }
 
-func (t *TrainingSet) initialize(parameters ModelParameters) {
+func (t *TrainingSet) Initialize(parameters ModelParameters) {
 	t.ModelParameters = parameters
 	t.sumRatings = 0
-	t.ratingsMatrix.createNew(t.numItems, t.numUsers)
+	t.ratingsMatrix.createNew(t.NumItems, t.NumUsers)
 
 }
 
 // Fill the training set with a known user/item rating
-func (t *TrainingSet) setRating(user int, item int, value float64){
+func (t *TrainingSet) SetRating(user int, item int, value float64){
 	t.ratingsMatrix.set(value, item, user)
 	t.sumRatings += value
 }
@@ -31,18 +31,18 @@ func (t *TrainingSet) averageItemRating(item int) float64 {
 }
 
 // Add a known rating to the training set
-func (t* TrainingSet) addRating(user int, item int, value float64) {
+func (t* TrainingSet) AddRating(user int, item int, value float64) {
 	t.ratingsMatrix.set(value, item, user)
-	t.trainingSize++
+	t.TrainingSize++
 	t.sumRatings += value
 }
 
 // Add a new user to the training set
-func (t *TrainingSet) addUser() {
+func (t *TrainingSet) AddUser() {
 	t.ratingsMatrix.addCol()
 }
 
 // Add a new item to the training set
-func (t *TrainingSet) addItem() {
+func (t *TrainingSet) AddItem() {
 	t.ratingsMatrix.addRow()
 }

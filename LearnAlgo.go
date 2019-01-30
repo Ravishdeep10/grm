@@ -8,10 +8,10 @@ import (
 // An interface for learning algorithms
 type LearnAlgo interface {
 	// A stochastic gradient descent
-	learn(set TrainingSet) *LearnedFactors
+	Learn(set TrainingSet) *LearnedFactors
 
 	// Returns approximates user's rating of an item based on some learned factors
-	estimateRating(userIndex int, itemIndex int, lfactors *LearnedFactors) float64
+	EstimateRating(userIndex int, itemIndex int, lfactors *LearnedFactors) float64
 }
 
 // A basic Matrix factorization algorithm
@@ -28,21 +28,21 @@ func (m *BasicMF) estimateItemRating(a []float64, b[]float64, dimensionality int
 
 
 // A Matrix Factorization algo using Stochastic Gradient Learning
-func (m *BasicMF) learn(tset TrainingSet) *LearnedFactors {
+func (m *BasicMF) Learn(tset TrainingSet) *LearnedFactors {
 	// initialize learned factors
 
-	itemFactors := randomMatInit(tset.numItems, tset.k)
-	userFactors := randomMatInit(tset.k, tset.numUsers)
+	itemFactors := randomMatInit(tset.NumItems, tset.Dimensionality)
+	userFactors := randomMatInit(tset.Dimensionality, tset.NumUsers)
 
-	for step := 0; step < tset.steps; step++ {
+	for step := 0; step < tset.Steps; step++ {
 		for i := 0; i < tset.ratingsMatrix.Rows(); i++ {
 			for j := 0; j < tset.ratingsMatrix.Cols(); j++ {
 				rating, _ := tset.ratingsMatrix.get(i, j)
 				if rating > 0 {
-					eij := rating - m.estimateItemRating(itemFactors.getRow(i), userFactors.getCol(j), tset.k)
-					for z := 0; z < tset.k; z++  {
-						itemFactors.Set(i, z, itemFactors.Get(i, z) + tset.alpha*(2*eij*userFactors.Get(z, j) - tset.beta*itemFactors.Get(i, z)))
-						userFactors.Set(z, j, userFactors.Get(z, j) + tset.alpha*(2*eij*itemFactors.Get(i, z) - tset.beta*userFactors.Get(z, j)))
+					eij := rating - m.estimateItemRating(itemFactors.getRow(i), userFactors.getCol(j), tset.Dimensionality)
+					for z := 0; z < tset.Dimensionality; z++  {
+						itemFactors.Set(i, z, itemFactors.Get(i, z) + tset.Alpha*(2*eij*userFactors.Get(z, j) - tset.Beta*itemFactors.Get(i, z)))
+						userFactors.Set(z, j, userFactors.Get(z, j) + tset.Alpha*(2*eij*itemFactors.Get(i, z) - tset.Beta*userFactors.Get(z, j)))
 					}
 				}
 			}
@@ -53,9 +53,9 @@ func (m *BasicMF) learn(tset TrainingSet) *LearnedFactors {
 			for j := 0; j < tset.ratingsMatrix.Cols(); j++ {
 				rating, _ := tset.ratingsMatrix.get(i, j)
 				if rating > 0 {
-					e += math.Pow(rating - m.estimateItemRating(itemFactors.getRow(i), userFactors.getCol(j), tset.k), 2)
-					for z := 0; z < tset.k; z++ {
-						e += (tset.beta/2) * (math.Pow(itemFactors.Get(i, z), 2) + math.Pow(userFactors.Get(z, j), 2))
+					e += math.Pow(rating - m.estimateItemRating(itemFactors.getRow(i), userFactors.getCol(j), tset.Dimensionality), 2)
+					for z := 0; z < tset.Dimensionality; z++ {
+						e += (tset.Beta/2) * (math.Pow(itemFactors.Get(i, z), 2) + math.Pow(userFactors.Get(z, j), 2))
 					}
 				}
 			}
@@ -69,9 +69,9 @@ func (m *BasicMF) learn(tset TrainingSet) *LearnedFactors {
 
 
 	l := &LearnedFactors{
-		numItems: tset.numItems,
-		numUser: tset.numUsers,
-		dimensionality: tset.k,
+		numItems: tset.NumItems,
+		numUser: tset.NumUsers,
+		dimensionality: tset.Dimensionality,
 		ratingsAvg:0,
 		itemFactors: itemFactors,
 		userFactors: userFactors,
@@ -82,7 +82,7 @@ func (m *BasicMF) learn(tset TrainingSet) *LearnedFactors {
 
 
 
-func (m *BasicMF) estimateRating(userIndex int, itemIndex int, lfactors *LearnedFactors) float64{
+func (m *BasicMF) EstimateRating(userIndex int, itemIndex int, lfactors *LearnedFactors) float64{
 	if userIndex >= lfactors.numUser {
 		log.Fatalln("Out of Bounds error")
 	}
